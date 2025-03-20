@@ -8,8 +8,8 @@ export class Player {
     @Column()
     name: string;
 
-    @Column({ nullable: true })
-    ranking: number;
+    @Column({ default: 0 })
+    points: number;
 
     @Column({ nullable: true })
     preferredCue: string;

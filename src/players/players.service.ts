@@ -16,7 +16,7 @@ export class PlayersService {
     let player = new Player();
 
     player.name = createPlayerDto.name;
-    player.ranking = createPlayerDto.ranking;
+    player.points = createPlayerDto.ranking;
     player.preferredCue = createPlayerDto.preferredCue;
 
     return this.playersRepository.save(player);
@@ -40,7 +40,7 @@ export class PlayersService {
       player.name = updatePlayerDto.name;
     }
     if (updatePlayerDto.ranking !== undefined) {
-      player.ranking = updatePlayerDto.ranking;
+      player.points = updatePlayerDto.ranking;
     }
     if (updatePlayerDto.preferredCue !== undefined) {
       player.preferredCue = updatePlayerDto.preferredCue;
