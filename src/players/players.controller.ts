@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PlayersService } from './players.service';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { NotFoundError } from 'src/errors/notFound.error';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
+import { PlayersService } from './players.service';
 
 @Controller('players')
 export class PlayersController {
-  constructor(private readonly playersService: PlayersService) {}
+  constructor(private readonly playersService: PlayersService) { }
 
   @Post()
   create(@Body() createPlayerDto: CreatePlayerDto) {
@@ -23,8 +24,15 @@ export class PlayersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-    return this.playersService.update(+id, updatePlayerDto);
+  async update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
+    try {
+      return await this.playersService.update(+id, updatePlayerDto);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return new NotFoundException(error.message);
+      }
+      return error;
+    }
   }
 
   @Delete(':id')

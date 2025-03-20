@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
+import { NotFoundError } from 'src/errors/notFound.error';
 
 @Injectable()
 export class PlayersService {
@@ -13,13 +14,7 @@ export class PlayersService {
   ) { }
 
   create(createPlayerDto: CreatePlayerDto) {
-    let player = new Player();
-
-    player.name = createPlayerDto.name;
-    player.points = createPlayerDto.ranking;
-    player.preferredCue = createPlayerDto.preferredCue;
-
-    return this.playersRepository.save(player);
+    return this.playersRepository.save(createPlayerDto);
   }
 
   findAll() {
@@ -34,7 +29,7 @@ export class PlayersService {
     let player = await this.playersRepository.findOneBy({ id: id });
 
     if (!player) {
-      throw new Error('Player not found');
+      throw new NotFoundError(`Player ${id} not found`);
     }
     if (updatePlayerDto.name !== undefined) {
       player.name = updatePlayerDto.name;

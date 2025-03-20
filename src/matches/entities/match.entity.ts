@@ -1,15 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Player } from 'src/players/entities/player.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Match {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    player1id: number;
+    @ManyToOne(() => Player, player => player.id)
+    player1: Player;
 
-    @Column()
-    player2id: number;
+    @ManyToOne(() => Player, player => player.id)
+    player2: Player;
 
     @Column({ default: () => 'CURRENT_TIMESTAMP' })
     startTime: Date;
@@ -17,8 +18,8 @@ export class Match {
     @Column({ nullable: true })
     endTime: Date;
 
-    @Column({ nullable: true })
-    winnerId: number;
+    @ManyToOne(() => Player, player => player.id)
+    winner: Player;
 
     @Column()
     tableNumber: number;

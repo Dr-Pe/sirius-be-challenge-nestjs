@@ -1,15 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MatchesService } from './matches.service';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { NotFoundError } from 'src/errors/notFound.error';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
+import { MatchesService } from './matches.service';
 
 @Controller('matches')
 export class MatchesController {
-  constructor(private readonly matchesService: MatchesService) {}
+  constructor(private readonly matchesService: MatchesService) { }
 
   @Post()
-  create(@Body() createMatchDto: CreateMatchDto) {
-    return this.matchesService.create(createMatchDto);
+  async create(@Body() createMatchDto: CreateMatchDto) {
+    try {
+      return await this.matchesService.create(createMatchDto);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return new NotFoundException(error.message);
+      }
+      return error;
+    }
   }
 
   @Get()
@@ -23,8 +31,15 @@ export class MatchesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
-    return this.matchesService.update(+id, updateMatchDto);
+  async update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
+    try {
+      return await this.matchesService.update(+id, updateMatchDto);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return new NotFoundException(error.message);
+      }
+      return error;
+    }
   }
 
   @Delete(':id')
