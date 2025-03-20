@@ -11,7 +11,7 @@ import { PlayersModule } from './players/players.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'test',
+      database: './test.db',
       entities: [
         Match,
         Player,
