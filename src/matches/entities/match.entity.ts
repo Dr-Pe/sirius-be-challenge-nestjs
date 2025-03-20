@@ -11,13 +11,13 @@ export class Match {
     @Column()
     player2id: number;
 
-    @Column()
+    @Column({ default: () => 'CURRENT_TIMESTAMP' })
     startTime: Date;
 
-    @Column()
+    @Column({ nullable: true })
     endTime: Date;
 
-    @Column()
+    @Column({ nullable: true })
     winnerId: number;
 
     @Column()
